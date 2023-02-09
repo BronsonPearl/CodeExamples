@@ -1,0 +1,20 @@
+alarmlimit_s ghsetalarmlimits(boid)
+{
+alarmlimit_s calarm;
+calarm.hight = UPPERATEMP;
+calarm.lowt = LOWERATEMP;
+calarm.highh = UPPERHUMID;
+calarm.lowh = LOWERHUMID;
+calarm.highp
+	lowp
+
+6 if statement
+
+
+5.
+ghcontorl.c/h void ghdisplayalarms(alarm_s alrm[NALARMS]);
+ghc.c = GhDispalyAlarms(warn);
+
+const char alarmnames[NALARMS][ALARMNMSZ = 
+{"No Alarms", "High Temperature", "low temperature", "high humid","low humid","high pressure","low pressure"];
+
