@@ -1,0 +1,24 @@
+# depslib dependency file v1.0
+1586393932 source:g:\comp eng\tech 104 labs paul weather station\lab10\wxstn\wxstn.c
+	<stdio.h>
+	<conio.h>
+	<stdlib.h>
+	<time.h>
+	"wx.h"
+
+1586314872 g:\comp eng\tech 104 labs paul weather station\lab10\wxstn\wx.h
+
+1586395858 source:g:\comp eng\tech 104 labs paul weather station\lab10\wxstn\wx.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<string.h>
+	"wx.h"
+
+1586393932 source:g:\comp eng\tech 104 labs paul weather station\lab10\wxstn\mainwx.c
+	<stdio.h>
+	<conio.h>
+	<stdlib.h>
+	<time.h>
+	"wx.h"
+

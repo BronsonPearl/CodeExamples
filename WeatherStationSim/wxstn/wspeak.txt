@@ -1,0 +1,3 @@
+ temperature -24.0 degrees celsius humidity  34 per cent pressure 107.0 kilo pascals windspeed  53 kilometers per hour wind direction  10 degrees
+ temperature 34.0 degrees celsius humidity  90 per cent pressure 94.0 kilo pascals windspeed  63 kilometers per hour wind direction 172 degrees
+ temperature -26.0 degrees celsius humidity   7 per cent pressure 86.0 kilo pascals windspeed  66 kilometers per hour wind direction  15 degrees
