@@ -32,7 +32,7 @@ hsvfitler.py contains a method to implement a hsv colour filter
 eyeballs.py contains all the methods to do image processing for different filters such as canny edge and hsv filtering. 
 this class also contains the information to draw the rectangles around the object and return points of interest for our mouse to click on.
 
-windowcapture.py is self titled. This contains the methods to capture the image of the game window.  We have specified that this will only capture the Old School RuneScape 
+windowcapture.py is self titled. This contains the methods to capture the image of the game window.  I have specified that this will only capture the Old School RuneScape 
 game client.  Then it will store the image as bitmap. Then convert it to a np array for OpenCV to use. Lastly it will crop the game window to only show what's on the game screen
 no pesky windowed mode bars
 
