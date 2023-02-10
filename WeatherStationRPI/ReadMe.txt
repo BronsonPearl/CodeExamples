@@ -7,4 +7,4 @@ this program was written in C on the raspberry pi and then compiled use a gcc ma
 
 the simulated weather data comes in as if it was being taken from a sensor.  Data is then stored in a struct.
 depending on the value will determine a certain state for the machine on a high or low reading.
-this state will determine the colour of displayed on the sense hat. 
+this state will determine the colour displayed on the sense hat. 
