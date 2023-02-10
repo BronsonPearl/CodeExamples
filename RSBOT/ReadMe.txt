@@ -1,4 +1,5 @@
 This is an automated woodcutting bot for the online browser based game RuneScape.
+This bot is trained to only cut willow trees in game. In it's current state there are some false positives depending on camera angle and lighting in game.
 
 This game holds a spot in my heart as it was one of my childhood favourites before i was introduced into world of warcraft.
 now that im an adult i felt i dont have the time to grind away on skills in game so i thought i would use this as an opportunity to explore OpenCV and Machine Learning
