@@ -12,6 +12,7 @@ from bot import RSBot, BotState
 windowcap = WindowCapture('Old School RuneScape')
 detect = objDetection('Y:\\opencv projects\\ScapeEyesML\\cascadeOutput\\cascade.xml')
 compeyes = Eyes(None)
+
 bot = RSBot((windowcap.offset_x, windowcap.offset_y))
 
 clock = time()
@@ -25,20 +26,42 @@ bot.start()
 while True:
 
     clock = time()
+
+    # if we don't have a screenshot yet, don't run the code below this point yet
     if windowcap.screenshot is None:
         continue
 
+    # give detector the current screenshot to search for objects in
     detect.update(windowcap.screenshot)
 
+    # update the bot with the data it needs right now
+    if bot.state == BotState.INITIALIZING:
+        # while bot is waiting to start, go ahead and start giving it some targets to work
+        # on right away when it does start
+        targets = compeyes.get_click_points(detect.rectangles)
+        bot.update_targets(targets)
+    elif bot.state == BotState.SEARCHING:
+        # when searching for something to click on next, the bot needs to know what the click
+        # points are for the current detection results. it also needs an updated screenshot
+        # to verify the hover tooltip once it has moved the mouse to that position
+        targets = compeyes.get_click_points(detect.rectangles)
+        bot.update_targets(targets)
+        bot.update_screenshot(windowcap.screenshot)
+    elif bot.state == BotState.MOVING:
+        # when moving, we need fresh screenshots to determine when we've stopped moving
+        bot.update_screenshot(windowcap.screenshot)
+    elif bot.state == BotState.CUTTING:
+        # nothing is needed while we wait for the mining to finish
+        pass
+
+    #if DEBUG:
     # draw the detection results onto the original image
     detection_image = compeyes.draw_rectangles(windowcap.screenshot, detect.rectangles)
-
     # display the images
-    cv2.imshow('Matches', windowcap.screenshot)
+    cv2.imshow('Matches', detection_image)
 
-    
-
-    # close window matches window or create postive/negative screenshot for training    
+    # press 'q' with the output window focused to exit.
+    # waits 1 ms every loop to process key presses
     key = cv2.waitKey(1)
     if key == ord('q'):
         windowcap.stop()

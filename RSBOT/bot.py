@@ -17,7 +17,8 @@ class RSBot:
     INIT_SECONDS = 6
     CUTTING_SECONDS = 10
     MOVEMENT_STOPPED_THRESHOLD = 0.975
-    IGNORE_RADIUS = 130
+    IGNORE_RADIUS = 10
+    TOOLTIP_MATCH_THRESHOLD = 0.72
 
     #threading properties
     stopped = True
@@ -26,12 +27,13 @@ class RSBot:
     #properties
     state = None
     targets = []
-    screeshot = None
+    screenshot = None
     timestamp = None
     movement_screenshot = None
     window_offset = (0,0)
     window_w = 0
     window_h = 0
+    tooltip = None
 
     click_history = []
 
@@ -42,18 +44,10 @@ class RSBot:
         self.window_offset = window_offset
         self.window_w = window_offset[0]
         self.window_h = window_offset[1]
+        # pre-load the needle image used to confirm our object detection
+        self.tooltip = cv2.imread('Y:\\opencv projects\\ScapeEyesML\\tooltip2.png', cv2.IMREAD_ANYCOLOR)
         self.state = BotState.INITIALIZING
         self.timestamp = time()
-
-    def update_targets(self, targets):
-        self.lock.acquire()
-        self.targets = targets
-        self.lock.release()
-
-    def update_screenshot(self, screenshot):
-        self.lock.acquire()
-        self.screeshot = screenshot
-        self.lock.release()
 
     def click_next_target(self):
         targets = self.targets_ordered_by_distance(self.targets)
@@ -65,21 +59,21 @@ class RSBot:
             if self.stopped:
                 break
 
-        target_pos = targets[target_i]
-        screen_x, screen_y = self.get_screen_position(target_pos)
+            target_pos = targets[target_i]
+            screen_x, screen_y = self.get_screen_position(target_pos)
         
-        # move the mouse
-        pyautogui.moveTo(x=screen_x, y=screen_y)
-        # short pause to let the mouse movement complete and allow
-        # time for the tooltip to appear
-        sleep(1.250)
-        # confirm tooltip
-        if self.confirm_tooltip(target_pos):
-            found_tree = True
-        pyautogui.click()
-        # save this position to the click history
-        self.click_history.append(target_pos)
-        target_i += 1
+            # move the mouse
+            pyautogui.moveTo(x=screen_x, y=screen_y)
+            # short pause to let the mouse movement complete and allow
+            # time for the tooltip to appear
+            sleep(1.250)
+            # confirm tooltip
+            if self.confirm_tooltip(target_pos):
+                found_tree = True
+                pyautogui.click()
+                # save this position to the click history
+                self.click_history.append(target_pos)
+            target_i += 1
 
         return found_tree
 
@@ -135,18 +129,47 @@ class RSBot:
     def have_stopped_moving(self):
         #grab screenshot to compare to see if moving
         if self.movement_screenshot is None:
-            self.movement_screenshot = self.screeshot.copy()
+            self.movement_screenshot = self.screenshot.copy()
             return False
         
         #compare old screenshot to new
-        result = cv2.matchTemplate(self.screeshot, self.movement_screenshot, cv2.TM_CCOEFF_NORMED)
+        result = cv2.matchTemplate(self.screenshot, self.movement_screenshot, cv2.TM_CCOEFF_NORMED)
         similarity = result[0][0]
 
         if similarity >= self.MOVEMENT_STOPPED_THRESHOLD:
             return True
 
-        self.movement_screenshot = self.screeshot.copy()
+        self.movement_screenshot = self.screenshot.copy()
         return False
+    
+    def confirm_tooltip(self, target_position):
+        # check the current screenshot for the limestone tooltip using match template
+        result = cv2.matchTemplate(self.screenshot, self.tooltip, cv2.TM_CCOEFF_NORMED)
+        # get the best match postition
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+        # if we can closely match the tooltip image, consider the object found
+        if max_val >= self.TOOLTIP_MATCH_THRESHOLD:
+            # print('Tooltip found in image at {}'.format(max_loc))
+            # screen_loc = self.get_screen_position(max_loc)
+            # print('Found on screen at {}'.format(screen_loc))
+            # mouse_position = pyautogui.position()
+            # print('Mouse on screen at {}'.format(mouse_position))
+            # offset = (mouse_position[0] - screen_loc[0], mouse_position[1] - screen_loc[1])
+            # print('Offset calculated as x: {} y: {}'.format(offset[0], offset[1]))
+            # the offset I always got was Offset calculated as x: -22 y: -29
+            return True
+        #print('Tooltip not found.')
+        return False
+    
+    def update_targets(self, targets):
+        self.lock.acquire()
+        self.targets = targets
+        self.lock.release()
+
+    def update_screenshot(self, screenshot):
+        self.lock.acquire()
+        self.screenshot = screenshot
+        self.lock.release()
 
     def start(self):
         self.stopped = False
@@ -194,7 +217,3 @@ class RSBot:
                     self.lock.acquire()
                     self.start = BotState.SEARCHING
                     self.lock.release()
-
-
-    def get_screen_position(self, position):
-        return (position[0] + self.offset_x, position[1] + self.offset_y)

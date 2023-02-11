@@ -68,6 +68,13 @@ class Eyes:
             cv2.drawMarker(haystack_img, (center_x, center_y), mark_color, mark_type)
 
         return points
+    
+    def centeroid(self, point_list):
+        point_list = np.asarray(point_list, dtype=np.int32)
+        length = point_list.shape[0]
+        sum_x = np.sum(point_list[:, 0])
+        sum_y = np.sum(point_list[:, 1])
+        return [np.floor_divide(sum_x, length), np.floor_divide(sum_y, length)]
 
     def init_control_gui(self):
         cv2.namedWindow(self.TRACKBAR_WINDOW, cv2.WINDOW_GUI_NORMAL)
