@@ -143,7 +143,7 @@ class RSBot:
         return False
     
     def confirm_tooltip(self, target_position):
-        # check the current screenshot for the limestone tooltip using match template
+        # check the current screenshot for the chop down willow tooltip using match template
         result = cv2.matchTemplate(self.screenshot, self.tooltip, cv2.TM_CCOEFF_NORMED)
         # get the best match postition
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
