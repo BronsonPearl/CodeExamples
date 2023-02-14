@@ -25,9 +25,9 @@ Cascadeutils.py is just a method to create the negative text file for our negati
 
 detection.py has the requied methods for implementing the object detection for the program
 
-edgefilter.py contains a method to implement a canny edge filter
+edgefilter.py contains a method to contain the data for a canny edge filter
 
-hsvfitler.py contains a method to implement a hsv colour filter
+hsvfitler.py contains a method to contain the data for a hsv colour filter
 
 eyeballs.py contains all the methods to do image processing for different filters such as canny edge and hsv filtering. 
 this class also contains the information to draw the rectangles around the object and return points of interest for our mouse to click on.
