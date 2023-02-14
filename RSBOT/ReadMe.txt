@@ -17,7 +17,9 @@ written with Python 3.10
 
 the positive image input, negative image input, and the cascade training output have been omitted from this repository to save space and time uploading as there is a file limit.
 
-this is version 0.9 of this bot.  In it's current state it has just stub routines for the pyautogui mouse utility
+this is version 0.9.1 of this bot.  In it's current state it is able to detect willow trees, determine the closest one from the middle of the screen.
+move the mouse to the detected tree, Click on it, and wait for a minute to cut down the tree, then repeat. Currently we are looking to add the ability to 
+empty the players inventory of logs that we collect. Add the ability to choose which tree you wish to cut in game. Switch the training OpenCV 3.4.11 to TensorFlow.   
 
 Controls for the bot such as mouse movement and clicking are in the bot.py
 
