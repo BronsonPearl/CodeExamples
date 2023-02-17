@@ -51,7 +51,7 @@ while True:
         # when moving, we need fresh screenshots to determine when we've stopped moving
         bot.update_screenshot(windowcap.screenshot)
     elif bot.state == BotState.CUTTING:
-        # nothing is needed while we wait for the mining to finish
+        # nothing is needed while we wait for the cutting to finish
         pass
 
     #if DEBUG:
