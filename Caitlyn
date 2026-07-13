@@ -1,0 +1,68 @@
+# this has been created as an agent with copilot studio.  This is a close recreation using MS Office. https://m365.cloud.microsoft/chat/?titleId=T_43f18099-2a01-9cdc-1369-127e59c21003&source=embedded-builder
+
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+
+print("\nChromebook Diagnostic AI\n")
+
+while True:
+    print(f"Have you tried turning it Off & On again?")
+    response = int(input(f"(1 = Yes, 0 = No)? "))
+    if response == 1:
+        break
+    else:
+        print(f"\nPlease hard reset the machine (Power + Refresh)\n")
+
+data = {
+    'Physically_Damaged': [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    'Powers_On':           [0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+    'Charger_Light_On':      [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+    'Screen_Blank':       [0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
+    'External_Monitor_Works':   [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+    'WiFi_Working':       [1, 1, 1, 1, 1, 0, 1, 1, 1, 1],
+    'Slow_Unstable':      [0, 0, 0, 0, 0, 0, 0, 1, 1, 0],
+    'Outcome': [
+        'IMMEDIATE ESCALATION: Escalate to T2 Hardware Repair', # Damaged
+        'Check Power Cable & Adapter',    # No power, no light
+        'Perform Hard Reset',             # No power, light on
+        'Escalate for Screen Repair',     # Screen blank, external works
+        'Escalate for Motherboard Repair',# Screen blank, no external
+        'Powerwash Chromebook',           # WiFi issues
+        'System Healthy: Close Ticket',   # Standard flow
+        'Clear Cache & Cookies',          # Slow/Unstable
+        'Run Memory/CPU Diagnostics',     # Persistent Slowness
+        'System Healthy: Close Ticket'    # Default
+    ]
+}
+
+# Train the AI Model
+df = pd.DataFrame(data)
+X = df.drop('Outcome', axis=1)
+y = df['Outcome']
+
+# We use entropy to ensure it picks the most decisive feature first
+clf = DecisionTreeClassifier(criterion='entropy').fit(X, y)
+
+# Interactive Input with Early Exit Logic
+user_responses = []
+
+for feature in X.columns:
+    response = int(input(f"{feature.replace('_', ' ')}? (1 = Yes, 0 = No)? "))
+    user_responses.append(response)
+    
+    # Check for the immediate leaf condition
+    current_input = user_responses + [0] * (len(X.columns) - len(user_responses))
+    temp_df = pd.DataFrame([current_input], columns=X.columns)
+    current_prediction = clf.predict(temp_df)[0]
+
+    if "IMMEDIATE ESCALATION" in current_prediction:
+        break
+    if "Screen Repair" in current_prediction:
+        break
+    #if "Motherboard Repair" in current_prediction:
+     #   break
+print(f"\n")
+print("-" * 30)
+print(f"DIAGNOSIS: {current_prediction}")
+print("-" * 30)
+print(f"\n")
